@@ -30,7 +30,7 @@ services:
       - WORDPRESS_DB_NAME=$MYSQL_DATABASE
       - WORDPRESS_TABLE_PREFIX=mio_
     volumes:
-      - ./project:/var/www/html
+      - ./proyecto:/var/www/html
     networks:
       - app-network
 
@@ -43,7 +43,7 @@ services:
     ports:
       - "8100:80"
     volumes:
-      - ./project:/var/www/html
+      - ./proyecto:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
     networks:
       - app-network
