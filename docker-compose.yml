@@ -1,47 +1,47 @@
-version: '3'
+version: '3.7'
 
 services:
-  project_db:
+  base_datos:
     image: mysql:8.0
-    container_name: project_db
+    container_name: $DB
     restart: unless-stopped
     ports:
       - 9100:3306
     env_file: .env
     environment:
-      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_DATABASE=${NOMBRE_PROYECTO}
     volumes:
       - ./dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       - app-network
 
-  project_wordpress:
+  wordpress:
     depends_on:
-      - project_db
+      - base_datos
     image: wordpress:5.7.2-fpm-alpine
-    container_name: project_wordpress
+    container_name: $WORDPRESS
     restart: unless-stopped
     env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=project_db:3306
+      - WORDPRESS_DB_HOST=$DB:3306
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
-      - WORDPRESS_DB_NAME=$MYSQL_DATABASE
-      - WORDPRESS_TABLE_PREFIX=mio_
+      - WORDPRESS_DB_NAME=${NOMBRE_PROYECTO}
+      - WORDPRESS_TABLE_PREFIX=$PREFIJO
     volumes:
       - ./proyecto:/var/www/html
     networks:
       - app-network
 
-  project_webserver:
+  webserver:
     depends_on:
-      - project_wordpress
+      - wordpress
     image: nginx:1.15.12-alpine
-    container_name: project_webserver
+    container_name: $WEBSERVER
     restart: unless-stopped
     ports:
-      - "8100:80"
+      - 8100:80
     volumes:
       - ./proyecto:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
