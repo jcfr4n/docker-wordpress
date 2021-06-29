@@ -13,6 +13,7 @@ echo "WORDPRESS=${NOMBRE_PROYECTO}_wordpress" >> .env
 echo "WEBSERVER=${NOMBRE_PROYECTO}_webserver" >> .env
 read -t 1 -p "Preparando configuración..." timeout
 echo ""
+mkdir nginx-conf
 touch ./nginx-conf/nginx.conf
 sed "s/?????/$NOMBRE_PROYECTO/g" nginx_default.conf>>./nginx-conf/nginx.conf
 echo ""
